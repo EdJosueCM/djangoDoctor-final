@@ -112,7 +112,9 @@ class Atencion(models.Model):
         
     @staticmethod
     def cantidad_atencion():
-       return Atencion.objects.all().count()
+        """Devuelve la cantidad total de atenciones registradas."""
+        return Atencion.objects.count()
+
    
    
 # Modelo que representa el detalle de una atención médica.

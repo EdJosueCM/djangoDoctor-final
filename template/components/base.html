@@ -47,7 +47,7 @@
                         </li>
                         <li><a class="dropdown-item" href="{% url 'attention:additional_services_list' %}"><i class="fas fa-cogs me-2"></i>Servicios</a>
                         </li>
-                        <li><a class="dropdown-item" href=""><i class="fas fa-cogs me-2"></i> Costos</a>
+                        <li><a class="dropdown-item" href="{% url 'attention:cost_list' %}"><i class="fas fa-cogs me-2"></i> Costos</a>
                         </li>
                         <li><a class="dropdown-item" href="{% url 'core:cargo_list' %}"><i class="fas fa-cogs me-2"></i> Cargo</a>
                         </li>
@@ -78,16 +78,26 @@
                 <a class="text-white text-decoration-none fw-bold d-inline-flex align-items-center gap-2 transition-all hover:text-primary-dark" href="{% url 'core:home' %}">
                         <i class="fas fa-home"></i> <!-- o cualquier otro icono de Font Awesome -->
                         {{title}}
-                    </a>
-                    <div class="d-flex align-items-center">
-                        <div class="dropdown">
-                            <button class="btn btn-link dropdown-toggle text-white" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-md me-2"></i>Dr {{request.user}}
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Perfil</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Salir</a></li>
-                            </ul>
+                        </a>
+                        <div class="d-flex align-items-center">
+                            <div class="dropdown">
+                                <div class="d-flex align-items-center">
+                                    {% if request.user.is_authenticated %}
+                                    <!-- Botón de Cerrar Sesión -->
+                                    <a href="{% url 'security:auth_logout' %}" class="btn btn-link text-white">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
+                                    </a>
+                                    {% else %}
+                                    <!-- Botón de Iniciar Sesión -->
+                                    <a href="{% url 'security:auth_login' %}" class="btn btn-link text-white">
+                                        <i class="fas fa-user me-2"></i> Iniciar sesión
+                                    </a>
+                                    <!-- Botón de Registrarse -->
+                                    <a href="{% url 'security:auth_signup' %}" class="btn btn-link text-white">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Registrarse
+                                    </a>
+                                    {% endif %}
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -109,7 +119,7 @@
                             </div>
                             <div>
                                 <h6 class="card-title mb-0">Citas Agendadas</h6>
-                                <h3 class="mb-0">{{cantidad_citas}}</h3>
+                                <h3 class="mb-0">{{can_citas}}</h3>
                             </div>
                         </div>
                     </div>
@@ -137,7 +147,7 @@
                             </div>
                             <div>
                                 <h6 class="card-title mb-0">Atenciones</h6>
-                                <h3 class="mb-0">{{ cantidad_atencion }}</h3>
+                                <h3 class="mb-0">{{ can_atencion }}</h3>
                             </div>
                         </div>
                     </div>

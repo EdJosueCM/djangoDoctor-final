@@ -5,6 +5,7 @@ from .views.medical_attention import *
 # from .views.Requested_exam import *
 from .views.Additional_services import *
 from .views.quotes import * 
+# from .views.care_cost import *
 app_name = 'attention'  
 
 urlpatterns = [
@@ -48,5 +49,12 @@ urlpatterns = [
     path('quote_update/<int:pk>/', QuoteUpdateView.as_view(), name='quote_update'),
     path('quote_detail/<int:pk>/', QuoteDetailView.as_view(), name='quote_detail'),
     path('quote_delete/<int:pk>/', QuoteDeleteView.as_view(), name='quote_delete'),
+    
+    # # URLs de costo atencion
+    # path('cost_list/', CostosAtencionListView.as_view(), name="cost_list"),
+    # path('cost_create/', CostosAtencionCreateView.as_view(), name="cost_create"),
+    # path('cost_update/<int:pk>/', CostosAtencionUpdateView.as_view(), name='cost_update'),
+    # path('cost_detail/<int:pk>/', CostosAtencionDetailView.as_view(), name='cost_detail'),
+    # path('cost_delete/<int:pk>/', CostosAtencionDeleteView.as_view(), name='cost_delete'),
 
 ]

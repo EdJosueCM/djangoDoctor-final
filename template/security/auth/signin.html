@@ -1,0 +1,290 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+<style>
+    /* General Styles */
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+        /* Default light background */
+        transition: background-color 0.3s ease, color 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    body.dark {
+        background-color: #1f2937;
+        /* Dark theme background */
+        color: #e5e7eb;
+        /* Light text for dark theme */
+    }
+
+    /* Centered content */
+    .content-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .form-container {
+        width: 100%;
+        max-width: 500px;
+        background-color: #ffffff;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .form-container.dark {
+        background-color: #2d3748;
+        color: #e5e7eb;
+    }
+
+    /* Image and logo */
+    .logo {
+        display: block;
+        margin: 0 auto;
+        width: 50px;
+        height: 50px;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: 'Pacifico', cursive;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    h1.dark,
+    h2.dark,
+    h3.dark,
+    h4.dark,
+    h5.dark,
+    h6.dark {
+        color: #e5e7eb;
+    }
+
+    /* Form Styles */
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        background-color: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 0.8rem;
+        font-size: 1rem;
+        color: #374151;
+        transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+        outline: none;
+    }
+
+    input[type="text"].dark,
+    input[type="password"].dark {
+        background-color: #374151;
+        color: #d1d5db;
+        border: 1px solid #6b7280;
+    }
+
+    input[type="text"].dark:focus,
+    input[type="password"].dark:focus {
+        border-color: #60a5fa;
+        box-shadow: 0 0 5px rgba(96, 165, 250, 0.5);
+    }
+
+    /* Buttons */
+    button {
+        background-color: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+        background-color: #2563eb;
+        transform: scale(1.05);
+    }
+
+    button.dark {
+        background-color: #2563eb;
+    }
+
+    button.dark:hover {
+        background-color: #1d4ed8;
+    }
+
+    /* Links */
+    a {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    a:hover {
+        color: #2563eb;
+    }
+
+    a.dark {
+        color: #60a5fa;
+    }
+
+    a.dark:hover {
+        color: #3b82f6;
+    }
+
+    /* Utilities */
+    .text-center {
+        text-align: center;
+    }
+</style>
+
+<div class="bg-slate-100 dark:bg-principal p-2 relative overflow-hidden">
+    <div class="absolute inset-0 bg-center blur-[106px]"></div>
+    <div class="content-wrapper">
+        <section class="form-container dark:bg-secundario" data-aos="fade-up" data-aos-delay="200">
+            <a href="/" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse text-center justify-center"
+                data-aos="fade-up">
+                <img src="{% static 'img/empty.png' %}" class="logo" alt="Logo" />
+            </a>
+            <div class="gap-2 mb-8">
+                <div class="flex flex-col items-center justify-center">
+                    <span class="bg-navbar rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                        {% trans 'INICIAR SESIÓN' %}
+                    </span>
+                </div>
+                <h1 class="dark:text-white text-4xl text-center mt-6 font-Pacifico">
+                    {{ title2 }}
+                </h1>
+                <p class="dark:text-gray-400 text-center mt-6 text-lg font-light">
+                    {% trans '¡Bienvenido de vuelta! Completa el formulario para ingresar a nuestro sistema' %}
+                </p>
+            </div>
+            <div class="grid lg:grid-cols-2 grid-cols-1 gap-x-24">
+                <div class="flex items-center lg:mb-0 mb-10">
+                    <div class="w-full max-w-md mx-auto">
+                        <form method="POST" enctype="multipart/form-data" class="space-y-8">
+                            {% csrf_token %}
+                            <div>
+                                <label for="{{ form.username.id_for_label }}"
+                                    class="dark:text-blue-300 font-black uppercase text-lg">{{ form.username.label}}</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <i class="text-blue-400 fa-solid fa-user"></i>
+                                    </span>
+                                    <input type="text" id="id_username" name="username"
+                                        class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="{{ form.password.id_for_label }}"
+                                    class="dark:text-blue-300 font-black uppercase text-lg">{{ form.password.label}}</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <i class="text-blue-400 fa-solid fa-lock"></i>
+                                    </span>
+                                    <input type="password" id="id_password" name="password"
+                                        class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
+                                    <button class="absolute inset-y-0 right-0 flex items-center pr-3" type="button"
+                                        id="togglePassword">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="submit"
+                                    class="bg-navbar py-3 px-5 text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                    {% trans 'Iniciar Sesión' %}
+                                </button>
+                            </div>
+                        </form>
+                        <div class="mt-6">
+                            <p class="dark:text-gray-400 text-center">{% trans '¿No tienes una cuenta?' %} <a
+                                    href="{% url 'security:auth_signup' %}"
+                                    class="text-blue-600 hover:underline dark:text-blue-300 font-Tiny5 uppercase">{% trans 'Regístrate' %}</a></p>
+                            <p class="dark:text-gray-400 text-center mt-3">
+                                {% trans '¿Has olvidado tu contraseña?' %}
+                                <a href="#"
+                                    class="text-blue-600 hover:underline dark:text-blue-300 font-Tiny5 uppercase">
+                                    {% trans 'Recupérala aquí' %}
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        var passwordInput = document.getElementById("id_password");
+        var icon = this.querySelector("i");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            passwordInput.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!---SCRIPT PARA LA CAPTURA DEL QR-->
+<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+<script>
+
+    // Función para obtener el token CSRF
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+{% endblock content %}
+
+{% block navbar %}
+{% endblock navbar %}

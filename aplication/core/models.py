@@ -3,11 +3,12 @@ from django.db import models
 from doctor.const import CIVIL_CHOICES, SEX_CHOICES
 from django.contrib.auth.models import User
 from doctor.utils import valida_cedula,phone_regex
-
+# from weasyprint import HTML
+from django.template.loader import render_to_string
+from django.core.files.base import ContentFile
+import tempfile
       
-      
-      
-      
+    
 """Modelo que representa los diferentes tipos de sangre.
 Se gestiona como un modelo separado para mantener flexibilidad
 y permitir futuras actualizaciones."""
@@ -373,6 +374,53 @@ class Diagnostico(models.Model):
         verbose_name_plural = "Diagnósticos"
 
 
+# Certificado
+# class Certificado(models.Model):
+#     # Relación con el paciente
+#     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, verbose_name="Paciente")
+#     # Relación con el doctor
+#     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, verbose_name="Doctor")
+#     # Tipo de certificado (Ej. Certificado Médico, Certificado de Examen, etc.)
+#     tipo = models.CharField(max_length=100, verbose_name="Tipo de Certificado")
+#     # Fecha de emisión
+#     fecha_emision = models.DateField(auto_now_add=True, verbose_name="Fecha de Emisión")
+#     # Observaciones adicionales
+#     observaciones = models.TextField(verbose_name="Observaciones", blank=True, null=True)
+#     # Estado del certificado (activo o no)
+#     activo = models.BooleanField(default=True, verbose_name="Activo")
+
+#     def __str__(self):
+#         return f"Certificado de {self.paciente} - {self.tipo}"
+
+#     class Meta:
+#         verbose_name = "Certificado Médico"
+#         verbose_name_plural = "Certificados Médicos"
+
+#     # Método para generar el PDF del certificado
+#     def generar_certificado_pdf(self):
+#         # Renderiza la plantilla HTML con los datos del certificado
+#         context = {
+#             'paciente': self.paciente,
+#             'doctor': self.doctor,
+#             'tipo': self.tipo,
+#             'fecha_emision': self.fecha_emision,
+#             'observaciones': self.observaciones,
+#         }
+        
+#         html_string = render_to_string('certificados/certificado_pdf.html', context)
+        
+#         # Convierte el HTML a PDF utilizando WeasyPrint
+#         html = HTML(string=html_string)
+#         pdf = html.write_pdf()
+        
+#         # Guardar el PDF generado como un archivo temporal
+#         file = tempfile.NamedTemporaryFile(delete=False)
+#         file.write(pdf)
+#         file.close()
+
+#         # Devuelve el archivo PDF
+#         return file.name
+
 
 
 # modelo que alamacena todos los aciones de ingreso, actualizacion, eliminacion d elos usarios que manipulan las opciones de la aplicacion
@@ -398,3 +446,49 @@ class AuditUser(models.Model):
         verbose_name_plural = 'Auditorias Usuarios'
         ordering = ('-fecha', 'hora')
         
+
+# class Certificado(models.Model):
+#     # Relación con el paciente
+#     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, verbose_name="Paciente")
+#     # Relación con el doctor
+#     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, verbose_name="Doctor")
+#     # Tipo de certificado (Ej. Certificado Médico, Certificado de Examen, etc.)
+#     tipo = models.CharField(max_length=100, verbose_name="Tipo de Certificado")
+#     # Fecha de emisión
+#     fecha_emision = models.DateField(auto_now_add=True, verbose_name="Fecha de Emisión")
+#     # Observaciones adicionales
+#     observaciones = models.TextField(verbose_name="Observaciones", blank=True, null=True)
+#     # Estado del certificado (activo o no)
+#     activo = models.BooleanField(default=True, verbose_name="Activo")
+
+#     def __str__(self):
+#         return f"Certificado de {self.paciente} - {self.tipo}"
+
+#     class Meta:
+#         verbose_name = "Certificado Médico"
+#         verbose_name_plural = "Certificados Médicos"
+
+#     # Método para generar el PDF del certificado
+#     def generar_certificado_pdf(self):
+#         # Renderiza la plantilla HTML con los datos del certificado
+#         context = {
+#             'paciente': self.paciente,
+#             'doctor': self.doctor,
+#             'tipo': self.tipo,
+#             'fecha_emision': self.fecha_emision,
+#             'observaciones': self.observaciones,
+#         }
+        
+#         html_string = render_to_string('certificados/certificado_pdf.html', context)
+        
+#         # Convierte el HTML a PDF utilizando WeasyPrint
+#         html = HTML(string=html_string)
+#         pdf = html.write_pdf()
+        
+#         # Guardar el PDF generado como un archivo temporal
+#         file = tempfile.NamedTemporaryFile(delete=False)
+#         file.write(pdf)
+#         file.close()
+
+#         # Devuelve el archivo PDF
+#         return file.name

@@ -19,30 +19,20 @@ class AttentionListView(LoginRequiredMixin,ListViewMixin,ListView):
     template_name = "attention/medical_attention/list.html"
     model = Atencion
     context_object_name = 'atenciones'
-    query = None
-    paginate_by = 5
+    # query = None
+    # paginate_by = 2
     
     def get_queryset(self):
-        self.query = Q()  # Inicializa self.query
-        q1 = self.request.GET.get('q')
-        sex = self.request.GET.get('sex')
-
-        if q1:
+        # self.query = Q()
+        q1 = self.request.GET.get('q') # ver
+        sex= self.request.GET.get('sex')
+        if q1 is not None: 
             self.query.add(Q(paciente__nombres__icontains=q1), Q.OR) 
             self.query.add(Q(paciente__apellidos__icontains=q1), Q.OR) 
             self.query.add(Q(paciente__cedula__icontains=q1), Q.OR) 
-
-        if sex in ['M', 'F']: 
-            self.query.add(Q(paciente__sexo=sex), Q.AND)   
-
+        if sex == "M" or sex=="F": self.query.add(Q(paciente__sexo__icontains=sex), Q.AND)   
         return self.model.objects.filter(self.query).order_by('-fecha_atencion')
     
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['cantidad_atencion'] = Atencion.cantidad_atencion() 
-        
-            
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
         # context['title'] = "SaludSync"

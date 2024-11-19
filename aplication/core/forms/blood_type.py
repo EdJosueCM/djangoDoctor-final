@@ -2,6 +2,7 @@ from django.forms import ModelForm, ValidationError
 from django import forms
 from aplication.core.models import TipoSangre
 
+
 class BloodTypeForm(ModelForm):
     class Meta:
         model = TipoSangre
