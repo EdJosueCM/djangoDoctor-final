@@ -1,0 +1,171 @@
+{% extends 'components/layout.html' %} 
+{% load static %} 
+{% block content %}
+
+      <!-- Main Content -->
+            <!-- Dashboard Content -->
+            {% if messages %}
+             <div id="notification-container" class="fixed top-0 right-0 m-3 z-50">
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <div id="alert-border-success" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <div class="d-flex align-items-center">z
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                                    <path d="M2 8.99997H5V21H2C1.44772 21 1 20.5523 1 20V9.99997C1 9.44769 1.44772 8.99997 2 8.99997ZM7.29289 7.70708L13.6934 1.30661C13.8693 1.13066 14.1479 1.11087 14.3469 1.26016L15.1995 1.8996C15.6842 2.26312 15.9026 2.88253 15.7531 3.46966L14.5998 7.99997H21C22.1046 7.99997 23 8.8954 23 9.99997V12.1043C23 12.3656 22.9488 12.6243 22.8494 12.8658L19.755 20.3807C19.6007 20.7554 19.2355 21 18.8303 21H8C7.44772 21 7 20.5523 7 20V8.41419C7 8.14897 7.10536 7.89462 7.29289 7.70708Z"></path>
+                                </svg>
+                                <div class="ms-3">
+                                    <span class="fw-bold">¡Buenas noticias!</span> {{ message }}<br>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% elif message.tags == 'error' %}
+                        <div id="alert-border-error" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <div class="d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                                    <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zM11 14h2v2h-2v-2zm0-8h2v6h-2V6z"></path>
+                                </svg>
+                                <div class="ms-3">
+                                    <span class="fw-bold">Malas noticias</span> {{ message }}<br>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                 
+                    {% endif %}
+                {% endfor %}
+            </div>
+           {% endif %}
+        <div class="card mb-4">
+            <div class="card-body">
+               <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="card-title mb-0">Listado de Tipos de Categoría</h5>
+               </div>
+
+               <!-- Search and Filter -->
+               <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between g-3 mb-4">
+                <form method="GET" action="{% url 'core:type_category_list' %}" class="d-flex flex-column flex-md-row gap-3 align-items-md-center">
+                <div class="col-md-6">
+                    <input type="text" name="q" class="form-control search-box" value="{{ request.GET.q }}" placeholder="Buscar tipo de categoría...">
+                </div>
+                </form>
+                <a class="btn btn-primary mt-3 mt-md-0" href="{% url 'core:type_category_create' %}">
+                <i class="fas fa-plus me-2"></i>Nuevo Tipo de Categoría
+                </a>
+            </div>
+
+            <!-- Type Category Table -->
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Valor Mínimo</th>
+                    <th>Valor Máximo</th>
+                    <th>Activo</th>
+                    <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   {% for item in TiposCategoria %} 
+                    <tr>
+                    <td>{{ item.nombre }}</td>
+                    <td>{{ item.descripcion }}</td>
+                    <td>{{ item.valor_minimo }}</td>
+                    <td>{{ item.valor_maximo }}</td>
+                    <td>
+                        <span class="patient-status {% if item.activo %}status-active{% else %}status-inactive{% endif %}"></span>
+                        {% if item.activo %}Activo{% else %}Inactivo{% endif %}
+                    </td>
+                    <td>
+                        <div class="action-buttons d-flex gap-2">
+                        <button class="btn btn-info btn-sm" title="Detalle Tipo de Categoría"
+                        onclick="verTipoCategoria('{{ item.id }}')">
+                        <i class="fas fa-eye"></i>
+                        </button>
+                        <a href="{% url 'core:type_category_update' item.id %}" class="btn btn-info btn-sm text-white" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-danger" onclick="confirmDelete('{{ item.id }}', '{{ item.nombre }}', 'Está seguro de eliminar este tipo de categoría:');"> 
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                        </div>
+                    </td>
+                    </tr>
+                 {% endfor %} 
+                </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <nav class="d-flex justify-content-between align-items-center mt-4">
+                <p class="text-muted mb-0">{{ page_obj.start_index }} - {{ page_obj.end_index }} de {{ page_obj.paginator.count }} tipos de categoría</p>
+                <ul class="pagination mb-0">
+                {% if page_obj.has_previous %} 
+                    <li class="page-item">
+                    <a class="page-link" href="?page=1"><i class="fas fa-chevron-left"></i></a>
+                    </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                  <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                  </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}"><i class="fas fa-chevron-right"></i></a>
+                  </li>
+                 {% endif %}
+                </ul>
+            </nav>
+            </div>
+        </div>
+
+        <!-- Include Delete Confirmation Modal -->
+        {% include 'includes/confirm_delete_modal.html' %}
+
+        {% include 'includes/type_category_detail_modal.html' %}
+
+        <script>
+            function confirmDelete(id, name, msg) {
+            document.getElementById('modalMessage').innerText = `${msg} ${name}`;
+            const form = document.getElementById('deleteForm');
+            form.action = `/type_category_delete/${id}/`; 
+            const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+            modal.show();
+            }
+
+            function closeModal() {
+            const modalElement = document.getElementById('confirmDeleteModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+            }
+
+            function verTipoCategoria(id) {
+            fetch(`/type_category_detail/${id}/`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('tipo_categoria-id').textContent = data.id;
+                document.getElementById('tipo_categoria-nombre').textContent = data.nombre;
+                document.getElementById('tipo_categoria-descripcion').textContent = data.descripcion;
+                document.getElementById('tipo_categoria-valor_minimo').textContent = data.valor_minimo;
+                document.getElementById('tipo_categoria-valor_maximo').textContent = data.valor_maximo;
+                document.getElementById('tipo_categoria-activo').textContent = data.activo ? 'Sí' : 'No';
+                const modal = new bootstrap.Modal(document.getElementById('tipo_categoria_Modal'));
+                modal.show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al cargar los datos del tipo de categoría');
+            })
+            }
+        </script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}
+
+        

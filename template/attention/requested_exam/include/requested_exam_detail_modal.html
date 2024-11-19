@@ -1,0 +1,46 @@
+{% comment %} templates/attention/requested_exam/include/requested_exam_detail_modal.html {% endcomment %}
+<div class="modal fade" id="requested_exam_Modal" tabindex="-1" aria-labelledby="requested_exam_ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary bg-opacity-75">
+                <h5 class="modal-title text-white fw-bold" id="requested_exam_ModalLabel">
+                    <i class="fas fa-file-alt me-2"></i>Detalles del Examen Solicitado
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong><i class="fas fa-id-card me-2"></i>ID:</strong> 
+                                           <span id="requested_exam-id"></span></p>
+                                        <p><strong><i class="fas fa-file-alt me-2"></i>Nombre del Examen:</strong> 
+                                           <span id="requested_exam-nombre_examen"></span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong><i class="fas fa-user me-2"></i>Paciente:</strong> 
+                                           <span id="requested_exam-paciente"></span></p>
+                                        <p><strong><i class="fas fa-check me-2"></i>Estado:</strong> 
+                                           <span id="requested_exam-estado"></span></p>
+                                    </div>
+                                    <div class="row">
+                                        <p><strong><i class="fas fa-comment me-2"></i>Comentario:</strong> 
+                                           <span id="requested_exam-comentario"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

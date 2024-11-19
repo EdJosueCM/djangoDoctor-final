@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Menú de Mantenimiento</h2>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card rounded">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Especialidad</h5>
+                    <a href="{% url 'core:specialty_list' %}" class="btn btn-primary">Entrar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card rounded">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Doctor</h5>
+                    <a href="{% url 'core:doctor_list' %}" class="btn btn-primary">Entrar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card rounded">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Horarios</h5>
+                    <a href="#" class="btn btn-primary">Entrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Más botones de mantenimiento -->
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card rounded">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Servicios</h5>
+                    <a href="#" class="btn btn-primary">Entrar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card rounded">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Costos</h5>
+                    <a href="#" class="btn btn-primary">Entrar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card rounded">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Cargo</h5>
+                    <a href="{% url 'core:cargo_list' %}" class="btn btn-primary">Entrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Continúa añadiendo más secciones según sea necesario -->
+</div>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Main Content -->
+{% if messages %}
+<div id="notification-container" class="fixed top-0 right-0 m-3 z-50">
+    {% for message in messages %}
+    {% if message.tags == 'success' %}
+    <div id="alert-border-success" class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                <path d="..."></path>
+            </svg>
+            <div class="ms-3">
+                <span class="fw-bold">¡Buenas noticias!</span> {{ message }}<br>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% elif message.tags == 'error' %}
+    <div id="alert-border-error" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                <path d="..."></path>
+            </svg>
+            <div class="ms-3">
+                <span class="fw-bold">Malas noticias</span> {{ message }}<br>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="card-title mb-0">Listado de Tipos de Medicamentos</h5>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between g-3 mb-4">
+            <form method="GET" action="{% url 'core:medicamento_type_list' %}"
+                class="d-flex flex-column flex-md-row gap-3 align-items-md-center">
+                <div class="col-md-6">
+                    <input type="text" name="q" class="form-control search-box" value="{{ request.GET.q }}"
+                        placeholder="Buscar tipo de medicamento...">
+                </div>
+            </form>
+            <a class="btn btn-primary mt-3 mt-md-0" href="{% url 'core:medicamento_type_create' %}">
+                <i class="fas fa-plus me-2"></i>Nuevo Tipo de Medicamento
+            </a>
+        </div>
+
+        <!-- TipoMedicamento Table -->
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Activo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in tipo_medicamentos %}
+                    <tr>
+                        <td>{{ item.nombre }}</td>
+                        <td>{{ item.descripcion }}</td>
+                        <td>{{ item.activo|yesno:"Sí,No" }}</td>
+                        <td>
+                            <div class="action-buttons d-flex gap-2">
+                                <a href="{% url 'core:medicamento_type_detail' item.id %}" class="btn btn-info btn-sm"
+                                    title="Detalle Tipo de Medicamento">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'core:medicamento_type_update' item.id %}"
+                                    class="btn btn-info btn-sm text-white" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button class="btn btn-danger"
+                                    onclick="confirmDelete('{{ item.id }}', '{{ item.nombre }}', '¿Está seguro de eliminar este tipo de medicamento?');">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <nav class="d-flex justify-content-between align-items-center mt-4">
+            <p class="text-muted mb-0">{{ page_obj.start_index }} - {{ page_obj.end_index }} de {{
+                page_obj.paginator.count }} tipos de medicamentos</p>
+            <ul class="pagination mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1"><i class="fas fa-chevron-left"></i></a>
+                </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}"><i
+                            class="fas fa-chevron-right"></i></a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Include Delete Confirmation Modal -->
+{% include 'includes/confirm_delete_modal.html' %}
+
+<script>
+    function confirmDelete(id, name, msg) {
+        document.getElementById('modalMessage').innerText = `${msg} ${name}`;
+        const form = document.getElementById('deleteForm');
+        form.action = `/tipo_medicamento_delete/${id}/`;
+        const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        modal.show();
+    }
+
+    function closeModal() {
+        const modalElement = document.getElementById('confirmDeleteModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (modalInstance) {
+            modalInstance.hide();
+        }
+    }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}

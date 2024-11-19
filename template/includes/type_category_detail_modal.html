@@ -1,0 +1,42 @@
+{% comment %} templates/includes/type_category_detail_modal.html {% endcomment %}
+<div class="modal fade" id="tipo_categoria_Modal" tabindex="-1" aria-labelledby="tipo_categoria_ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary bg-opacity-75">
+                <h5 class="modal-title text-white fw-bold" id="tipo_categoria_ModalLabel">
+                    <i class="fas fa-info-circle me-2"></i>Detalles del Tipo de Categoría
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong><i class="fas fa-id-card me-2"></i>ID:</strong> 
+                                   <span id="tipo_categoria-id"></span></p>
+                                <p><strong><i class="fas fa-tag me-2"></i>Nombre:</strong> 
+                                   <span id="tipo_categoria-nombre"></span></p>
+                                <p><strong><i class="fas fa-align-left me-2"></i>Descripción:</strong> 
+                                   <span id="tipo_categoria-descripcion"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong><i class="fas fa-dollar-sign me-2"></i>Valor Mínimo:</strong> 
+                                   <span id="tipo_categoria-valor_minimo"></span></p>
+                                <p><strong><i class="fas fa-dollar-sign me-2"></i>Valor Máximo:</strong> 
+                                   <span id="tipo_categoria-valor_maximo"></span></p>
+                                <p><strong><i class="fas fa-check me-2"></i>Activo:</strong> 
+                                   <span id="tipo_categoria-activo"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

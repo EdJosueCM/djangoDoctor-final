@@ -1,0 +1,52 @@
+{% comment %} templates/attention/Attention_hours/include/Attention_hours_detail_modal.html {% endcomment %}
+<div class="modal fade" id="horario_atencion_Modal" tabindex="-1" aria-labelledby="horario_atencion_ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary bg-opacity-75">
+                <h5 class="modal-title text-white fw-bold" id="horario_atencion_ModalLabel">
+                    <i class="fas fa-clock me-2"></i>Detalles del Horario de Atención
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong><i class="fas fa-id-card me-2"></i>ID:</strong> 
+                                           <span id="horario_atencion-id"></span></p>
+                                        <p><strong><i class="fas fa-calendar-day me-2"></i>Día de la Semana:</strong> 
+                                           <span id="horario_atencion-dia_semana"></span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong><i class="fas fa-clock me-2"></i>Hora de Inicio:</strong> 
+                                           <span id="horario_atencion-hora_inicio"></span></p>
+                                        <p><strong><i class="fas fa-clock me-2"></i>Hora de Fin:</strong> 
+                                           <span id="horario_atencion-hora_fin"></span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong><i class="fas fa-clock me-2"></i>Intervalo Desde:</strong> 
+                                           <span id="horario_atencion-Intervalo_desde"></span></p>
+                                        <p><strong><i class="fas fa-clock me-2"></i>Intervalo Hasta:</strong> 
+                                           <span id="horario_atencion-Intervalo_hasta"></span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong><i class="fas fa-check me-2"></i>Activo:</strong> 
+                                           <span id="horario_atencion-activo"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

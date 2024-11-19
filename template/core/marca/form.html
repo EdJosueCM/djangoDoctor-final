@@ -1,0 +1,158 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="container-fluid">
+    <!-- Display Messages -->
+    {% if messages %}
+    <div id="notification-container" class="fixed top-0 right-0 m-3 z-50">
+        {% for message in messages %}
+        {% if message.tags == 'error' %}
+        <div id="alert-border-error" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                    <path
+                        d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zM11 14h2v2h-2v-2zm0-8h2v6h-2V6z">
+                    </path>
+                </svg>
+                <div class="ms-3">
+                    <span>{{ message }}</span> <br>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!-- End of Messages -->
+
+    <!-- Marca Medicamento Form -->
+    <form method="post" enctype="multipart/form-data" class="py-4">
+        {% csrf_token %}
+        <div class="card shadow p-4">
+            <h2 class="text-center text-2xl font-bold text-blue-600 mb-4" style="font-family: Arial, sans-serif;">
+                {{ title1 }}
+            </h2>
+            <div class="row g-0">
+                <!-- Tipo -->
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.tipo.id_for_label }}" class="form-label fw-bold">
+                        {{ form.tipo.label }}
+                    </label>
+                    {{ form.tipo }}
+                    {% if form.tipo.errors %}
+                    <div class="text-danger">{{ form.tipo.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Marca Medicamento -->
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.marca_medicamento.id_for_label }}" class="form-label fw-bold">
+                        {{ form.marca_medicamento.label }}
+                    </label>
+                    {{ form.marca_medicamento }}
+                    {% if form.marca_medicamento.errors %}
+                    <div class="text-danger">{{ form.marca_medicamento.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Nombre -->
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.nombre.id_for_label }}" class="form-label fw-bold">
+                        {{ form.nombre.label }}
+                    </label>
+                    {{ form.nombre }}
+                    {% if form.nombre.errors %}
+                    <div class="text-danger">{{ form.nombre.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Descripción -->
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.descripcion.id_for_label }}" class="form-label fw-bold">
+                        {{ form.descripcion.label }}
+                    </label>
+                    {{ form.descripcion }}
+                    {% if form.descripcion.errors %}
+                    <div class="text-danger">{{ form.descripcion.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Concentración -->
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.concentracion.id_for_label }}" class="form-label fw-bold">
+                        {{ form.concentracion.label }}
+                    </label>
+                    {{ form.concentracion }}
+                    {% if form.concentracion.errors %}
+                    <div class="text-danger">{{ form.concentracion.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Cantidad -->
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.cantidad.id_for_label }}" class="form-label fw-bold">
+                        {{ form.cantidad.label }}
+                    </label>
+                    {{ form.cantidad }}
+                    {% if form.cantidad.errors %}
+                    <div class="text-danger">{{ form.cantidad.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Foto -->
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.foto.id_for_label }}" class="form-label fw-bold">
+                        {{ form.foto.label }}
+                    </label>
+                    {{ form.foto }}
+                    {% if form.foto.errors %}
+                    <div class="text-danger">{{ form.foto.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Precio -->
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.precio.id_for_label }}" class="form-label fw-bold">
+                        {{ form.precio.label }}
+                    </label>
+                    {{ form.precio }}
+                    {% if form.precio.errors %}
+                    <div class="text-danger">{{ form.precio.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Comercial -->
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.comercial.id_for_label }}" class="form-label fw-bold">
+                        {{ form.comercial.label }}
+                    </label>
+                    {{ form.comercial }}
+                    {% if form.comercial.errors %}
+                    <div class="text-danger">{{ form.comercial.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Activo -->
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.activo.id_for_label }}" class="form-label fw-bold">
+                        {{ form.activo.label }}
+                    </label>
+                    {{ form.activo }}
+                    {% if form.activo.errors %}
+                    <div class="text-danger">{{ form.activo.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="d-flex justify-content-end mt-4">
+                <button class="btn btn-outline-success me-2" type="submit">Registrar</button>
+                <a class="btn btn-outline-warning" href="{% url 'core:marca_medicamento_list' %}">Cancelar</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
