@@ -204,3 +204,20 @@ class CostoAtencionDetalle(models.Model):
         verbose_name_plural = "Costos detalles Atención"
 
 
+class Certificado(models.Model):
+    TIPO_CHOICES = [
+        ('MEDICO', 'Certificado Médico'),
+        ('REPOSO', 'Certificado de Reposo'),
+        ('DISCAPACIDAD', 'Certificado de Discapacidad')
+    ]
+
+    atencion = models.ForeignKey(Atencion, on_delete=models.PROTECT, verbose_name="Atención")
+    tipo_certificado = models.CharField(max_length=20, choices=TIPO_CHOICES, verbose_name="Tipo de Certificado")
+    fecha_emision = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Emisión")
+    descripcion = models.TextField(verbose_name="Descripción")
+    archivo_pdf = models.FileField(upload_to='certificados/', verbose_name="Archivo PDF")
+    
+    def __str__(self):
+        return f"{self.tipo_certificado} - {self.atencion.paciente}"
+    
+    

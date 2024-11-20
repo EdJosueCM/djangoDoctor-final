@@ -29,8 +29,7 @@
                 <a class="nav-link" href="{% url 'core:patient_list' %}"><i class="fas fa-user-injured me-2"></i> Pacientes</a>
                 
                 <a class="nav-link" href="{% url 'attention:attention_list' %}"><i class="fas fa-procedures me-2"></i> Atencion</a>
-                <a class="nav-link" href="{% url 'attention:attention_list' %}"><i class="fas fa-procedures me-2"></i>Ficha Clinica</a>
-                <a class="nav-link" href="#"><i class="fas fa-stethoscope me-2"></i>Pagos</a>
+                <a class="nav-link" href="{% url 'attention:clinical_record_list' %}"><i class="fas fa-procedures me-2"></i>Ficha Clinica</a>
                 <a class="nav-link" href="#"><i class="fas fa-stethoscope me-2"></i>Examenes</a>
                 <div class="dropup">
                     <button class="btn nav-link text-white d-flex justify-content-between align-items-center w-100" type="button"
@@ -47,11 +46,11 @@
                         </li>
                         <li><a class="dropdown-item" href="{% url 'attention:additional_services_list' %}"><i class="fas fa-cogs me-2"></i>Servicios</a>
                         </li>
-                        <li><a class="dropdown-item" href="{% url 'attention:cost_list' %}"><i class="fas fa-cogs me-2"></i> Costos</a>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cogs me-2"></i> Costos</a>
                         </li>
                         <li><a class="dropdown-item" href="{% url 'core:cargo_list' %}"><i class="fas fa-cogs me-2"></i> Cargo</a>
                         </li>
-                        <li><a class="dropdown-item" href=""><i class="fas fa-cogs me-2"></i>Certificados</a>
+                        <li><a class="dropdown-item" href="{% url 'attention:certificate_list' %}"><i class="fas fa-cogs me-2"></i>Certificados</a>
                         </li>
                         <li><a class="dropdown-item" href="{% url 'core:employee_list' %}"><i class="fas fa-cogs me-2"></i> Empleado</a>
                         </li>
@@ -173,18 +172,12 @@
                         <div class="card-body">
                             <h5 class="card-title mb-4">Acciones Rápidas</h5>
                             <div class="quick-actions d-flex flex-wrap gap-3">
-                                <button class="btn btn-primary"><i class="fas fa-plus-circle me-2"></i>Cita</button>
-                                <a class="btn btn-success text-white d-inline-flex align-items-center" href="{% url 'core:patient_list' %}">
-                                  <i class="fas fa-user-plus me-2"></i>
-                                  Paciente 
-                                </a>
+                                <a class="btn btn-secondary text-white" href="{% url 'attention:quote_list' %}" ><i class="fas fa-file-medical me-2"></i>Cita</a>
+                                <a class="btn btn-success text-white d-inline-flex align-items-center" href="{% url 'core:patient_list' %}"><i class="fas fa-user-plus me-2"></i>Paciente </a>
                                 <a class="btn btn-dark text-white" href="{% url 'attention:attention_list' %}" ><i class="fas fa-file-medical me-2"></i>Atencion</a>
-                               
-                                <a class="btn btn-info fw-bold text-white" href="#" ><i class="fas fa-file-medical me-2"></i>Certificado</a>
-                               
-                                <a class="btn btn-danger"><i class="fas fa-notes-medical me-2"></i>Ficha Clinica</a>
-                                 <a class="btn btn-secondary text-white" href="#" ><i class="fas fa-file-medical me-2"></i>Pagos</a>
-                                 <a class="btn btn-warning text-white" href="#" ><i class="fas fa-file-medical me-2"></i>Examenes</a>
+                                <a class="btn btn-info fw-bold text-white" href="{% url 'attention:certificate_list' %}" ><i class="fas fa-file-medical me-2"></i>Certificado</a>
+                                <a class="btn btn-danger" href="{% url 'attention:clinical_record_list' %}" ><i class="fas fa-notes-medical me-2"></i>Ficha Clinica</a>
+                                <a class="btn btn-warning text-white" href="#" ><i class="fas fa-file-medical me-2"></i>Examenes</a>
 
                             </div>
                         </div>
@@ -231,27 +224,21 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <h5 class="card-title mb-4">Próximas Citas</h5>
+                            {% if proximas_citas %}
+                            <p>Citas encontradas: {{ proximas_citas|length }}</p>
+                            {% for cita in proximas_citas %}
                             <div class="appointment-item d-flex align-items-center py-3 border-bottom">
-                                <img src="/api/placeholder/48/48" alt="Patient" class="rounded-circle me-3">
                                 <div>
-                                    <p class="mb-0 fw-bold">María García</p>
-                                    <small class="text-muted">Hoy - 10:00 AM</small>
+                                    <p class="mb-0 fw-bold">{{ cita.paciente.nombres }}</p>
+                                    <small class="text-muted">
+                                        {{ cita.fecha|date:"d M Y" }} - {{ cita.hora_cita|time:"H:i" }}
+                                    </small>
                                 </div>
                             </div>
-                            <div class="appointment-item d-flex align-items-center py-3 border-bottom">
-                                <img src="/api/placeholder/48/48" alt="Patient" class="rounded-circle me-3">
-                                <div>
-                                    <p class="mb-0 fw-bold">Carlos Rodríguez</p>
-                                    <small class="text-muted">Hoy - 11:30 AM</small>
-                                </div>
-                            </div>
-                            <div class="appointment-item d-flex align-items-center py-3">
-                                <img src="/api/placeholder/48/48" alt="Patient" class="rounded-circle me-3">
-                                <div>
-                                    <p class="mb-0 fw-bold">Ana Martínez</p>
-                                    <small class="text-muted">Hoy - 2:00 PM</small>
-                                </div>
-                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <p class="text-muted">No hay citas próximas.</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

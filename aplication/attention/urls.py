@@ -1,11 +1,14 @@
 from django.urls import path
 from .views.Attention_hours import *
-from .views.medical_appointment import *
+# from .views.medical_appointment import *
 from .views.medical_attention import *
 # from .views.Requested_exam import *
 from .views.Additional_services import *
 from .views.quotes import * 
 # from .views.care_cost import *
+from .views.clinical_record import *
+from .views.certificate import * 
+
 app_name = 'attention'  
 
 urlpatterns = [
@@ -16,12 +19,12 @@ urlpatterns = [
     path('attention_hours/delete/<int:pk>/', AttentionHoursDeleteView.as_view(), name='attention_hours_delete'),
     path('attention_hours/detail/<int:pk>/', AttentionHoursDetailView.as_view(), name='attention_hours_detail'),
     
-    # Medical Appointment
-    path('medical_appointment/', MedicalAppointmentListView.as_view(), name='medical_appointment_list'),
-    path('medical_appointment/create/', MedicalAppointmentCreateView.as_view(), name='medical_appointment_create'),
-    path('medical_appointment/update/<int:pk>/', MedicalAppointmentUpdateView.as_view(), name='medical_appointment_update'),
-    path('medical_appointment/delete/<int:pk>/', MedicalAppointmentDeleteView.as_view(), name='medical_appointment_delete'),
-    path('medical_appointment/detail/<int:pk>/', MedicalAppointmentDetailView.as_view(), name='medical_appointment_detail'),
+    # # Medical Appointment
+    # path('medical_appointment/', MedicalAppointmentListView.as_view(), name='medical_appointment_list'),
+    # path('medical_appointment/create/', MedicalAppointmentCreateView.as_view(), name='medical_appointment_create'),
+    # path('medical_appointment/update/<int:pk>/', MedicalAppointmentUpdateView.as_view(), name='medical_appointment_update'),
+    # path('medical_appointment/delete/<int:pk>/', MedicalAppointmentDeleteView.as_view(), name='medical_appointment_delete'),
+    # path('medical_appointment/detail/<int:pk>/', MedicalAppointmentDetailView.as_view(), name='medical_appointment_detail'),
     
     # Requested Exam
     # path('requested_exam/', RequestedExamListView.as_view(), name='requested_exam_list'),
@@ -47,8 +50,9 @@ urlpatterns = [
     path('quote_list/', QuoteListView.as_view(), name="quote_list"),
     path('quote_create/', QuoteCreateView.as_view(), name="quote_create"),
     path('quote_update/<int:pk>/', QuoteUpdateView.as_view(), name='quote_update'),
-    path('quote_detail/<int:pk>/', QuoteDetailView.as_view(), name='quote_detail'),
     path('quote_delete/<int:pk>/', QuoteDeleteView.as_view(), name='quote_delete'),
+    path('quote_detail/<int:pk>/', QuoteDetailView.as_view(), name='quote_detail'),
+
     
     # # URLs de costo atencion
     # path('cost_list/', CostosAtencionListView.as_view(), name="cost_list"),
@@ -56,5 +60,17 @@ urlpatterns = [
     # path('cost_update/<int:pk>/', CostosAtencionUpdateView.as_view(), name='cost_update'),
     # path('cost_detail/<int:pk>/', CostosAtencionDetailView.as_view(), name='cost_detail'),
     # path('cost_delete/<int:pk>/', CostosAtencionDeleteView.as_view(), name='cost_delete'),
-
+    
+    # URLs certificados
+    path('certificate_list/', CertificateListView.as_view(), name="certificate_list"),
+    path('certificate_create/', CertificateCreateView.as_view(), name="certificate_create"),
+    path('certificate_update/<int:pk>/', CertificateUpdateView.as_view(), name='certificate_update'),
+    path('certificate_delete/<int:pk>/', CertificateDeleteView.as_view(), name='certificate_delete'),
+    path('certificate_detail/<int:pk>/', CertificateDetailView.as_view(), name='certificate_detail'),
+    path('certificate_pdf/<int:pk>/', CertificatePDFView.as_view(), name='certificate_pdf'),
+    
+    # URLs fichas clinicas
+    path('clinical_record_list/', ClinicalRecordListView.as_view(), name="clinical_record_list"),
+    path('clinical_record_detail/<int:pk>/', ClinicalRecordDetailView.as_view(), name='clinical_record_detail'),
+    path('imprimir_historial_clinico/<int:pk>/', ImprimirHistorialClinico.as_view(), name='imprimir_historial_clinico'),
 ]

@@ -14,6 +14,8 @@ from aplication.core.views.tipo_med import *
 from aplication.core.views.audit import * 
 from aplication.core.views.brand_med import *
 
+
+
 app_name = 'core'
 
 urlpatterns = [
@@ -106,7 +108,7 @@ urlpatterns = [
   path('marca_medicamento_update/<int:pk>/', MarcaMedicamentoUpdateView.as_view(), name='marca_medicamento_update'),
   path('marca_medicamento_delete/<int:pk>/', MarcaMedicamentoDeleteView.as_view(), name='marca_medicamento_delete'),
   path('marca_medicamento_detail/<int:pk>/', MarcaMedicamentoDetailView.as_view(), name='marca_medicamento_detail'),
-  
+
 ]
 
 

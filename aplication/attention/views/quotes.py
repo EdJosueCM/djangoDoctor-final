@@ -11,6 +11,10 @@ from aplication.attention.forms.quotes import QuoteForm
 from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
 from doctor.utils import save_audit
 from django.core.mail import send_mail
+from datetime import datetime, timedelta
+from django.utils import timezone  # Agregamos esto
+
+
 
 class QuoteListView(LoginRequiredMixin, ListViewMixin, ListView):
     template_name = "attention/quotes/list.html"
@@ -25,11 +29,28 @@ class QuoteListView(LoginRequiredMixin, ListViewMixin, ListView):
                 Q(fecha__icontains=query)
             )
         return CitaMedica.objects.all()
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['cantidad_citas'] = CitaMedica.cantidad_citas()  # Llama al método que cuenta las citas
+        
+        hoy = timezone.now().date()
+        hora_actual = timezone.now().time()
+        fecha_limite = hoy + timedelta(days=7)
+        
+        proximas_citas = CitaMedica.objects.filter(
+            Q(fecha=hoy, hora_cita__gte=hora_actual) | Q(fecha__gt=hoy)
+        ).order_by('fecha', 'hora_cita')
+
+        context.update({
+            'proximas_citas': proximas_citas,
+            'fecha_actual': hoy,
+            'fecha_limite': fecha_limite,
+            'total_citas': proximas_citas.count()
+        })
+
         return context
+    
+    
 class QuoteCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     model = CitaMedica
     template_name = 'attention/quotes/form.html'
@@ -112,7 +133,7 @@ class QuoteUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
 
 class QuoteDeleteView(DeleteView, DeleteViewMixin, LoginRequiredMixin):
     model = CitaMedica
-    template_name = 'attention/quotes/delete.html'
+    # template_name = 'attention/quotes/delete.html'
     success_url = reverse_lazy('attention:quote_list')
 
     def post(self, request, *args, **kwargs):
