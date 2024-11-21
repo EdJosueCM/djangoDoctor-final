@@ -1,3 +1,4 @@
+
 from django.urls import reverse_lazy
 from aplication.core.forms.doctor import DoctorForm
 from aplication.core.models import Doctor
@@ -6,6 +7,9 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.db.models import Q
 from doctor.utils import save_audit
+from django.utils.timezone import now
+from django.utils import timezone
+
 
 class DoctorListView(ListView):
     template_name = "core/doctor/list.html"
@@ -43,12 +47,13 @@ class DoctorCreateView(CreateView):
         return context
     
     def form_valid(self, form):
-        # print("entro al form_valid")
-        response = super().form_valid(form)
-        doctor = self.object
+        doctor = form.save(commit=False)  # No guardamos inmediatamente
+        doctor.created_at = timezone.now()  # Establecemos created_at
+        doctor.save()  # Ahora sí guardamos
+        
         save_audit(self.request, doctor, action='A')
         messages.success(self.request, f"Éxito al crear al doctor {doctor.nombre_completo}.")
-        return response
+        return super().form_valid(form)
     
     def form_invalid(self, form):
         messages.error(self.request, "Error al Modificar el formulario. Corrige los errores.")

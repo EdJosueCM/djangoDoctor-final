@@ -8,7 +8,7 @@ from .views.quotes import *
 # from .views.care_cost import *
 from .views.clinical_record import *
 from .views.certificate import * 
-
+from .views.examen import *
 app_name = 'attention'  
 
 urlpatterns = [
@@ -73,4 +73,12 @@ urlpatterns = [
     path('clinical_record_list/', ClinicalRecordListView.as_view(), name="clinical_record_list"),
     path('clinical_record_detail/<int:pk>/', ClinicalRecordDetailView.as_view(), name='clinical_record_detail'),
     path('imprimir_historial_clinico/<int:pk>/', ImprimirHistorialClinico.as_view(), name='imprimir_historial_clinico'),
+    
+    #URLs Examens
+    path('examenes_list/', ExamenListView.as_view(), name='examen_list'),
+    path('examenes_create/', ExamenCreateView.as_view(), name='examen_create'),
+    path('examenes_update/<int:pk>/', ExamenUpdateView.as_view(), name='examen_update'),
+    path('examenes_delete/<int:pk>/', ExamenDeleteView.as_view(), name='examen_delete'),
+    path('examenes_detail/<int:pk>/', ExamenDetailView.as_view(), name='examen_detail'),
+    # path('examenes/<int:pk>/', ExamenUploadResultadoView.as_view(), name='examen_upload_resultado'),
 ]

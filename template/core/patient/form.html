@@ -2,6 +2,9 @@
 {% load static %}
 {% block css%}
 <link rel="stylesheet" href={% static 'css/form.css' %}>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css">
+<script src="https://cdn.tailwindcss.com"></script>
 {% endblock %}
 
 {% block content %}
@@ -28,8 +31,7 @@
                                 {% endif %}
                             </div>
                             <div class="text-center">
-                                <label for="{{ form.foto.id_for_label }}" class="form-label fw-bold">{{ form.foto.label
-                                    }}</label>
+                                <label for="{{ form.foto.id_for_label }}" class="form-label fw-bold">{{ form.foto.label}}</label>
                                 {{ form.foto }}
                             </div>
                         </div>
@@ -121,8 +123,11 @@
                                     {{ form.activo }}
                                 </div>
                             </div>
+                            <div 
+                                <div id="map" class="w-full h-64" style="height: 350px;"></div>
+                            </div>
                             <div class="d-flex justify-content-end mt-4">
-                                <button class="btn btn-outline-success me-2" type="submit">Grabar Doctor</button>
+                                <button class="btn btn-outline-success me-2" type="submit">Grabar Paciente</button>
                                 <a class="btn btn-outline-warning" href="{% url 'core:patient_list'%}">Cancelar</a>
                             </div>
                         </div>
@@ -132,4 +137,69 @@
         </div>
     </div>
 </div>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpX4-DIMYrET59UvT7GIxymXq8_ZO2YUQ&callback=initMap&libraries=places"
+    async defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+<script src="https://unpkg.com/leaflet-geocoder"></script>
+<script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ecuadorLat = -1.8312;
+        var ecuadorLon = -78.1834;
+
+        var map = L.map('map').setView([ecuadorLat, ecuadorLon], 7);
+        var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        });
+
+        osmLayer.addTo(map);
+
+        L.control.scale().addTo(map);
+
+        var currentMarker = null;
+
+        function updateMarkerAndFields(lat, lng) {
+            if (currentMarker) {
+                map.removeLayer(currentMarker);
+            }
+            currentMarker = L.marker([lat, lng]).addTo(map);
+            map.setView([lat, lng], 13);
+
+            document.getElementById('id_latitud').value = lat.toFixed(6);
+            document.getElementById('id_longitud').value = lng.toFixed(6);
+        }
+
+        // Actualizar marcador al hacer clic en el mapa
+        map.on('click', function (e) {
+            updateMarkerAndFields(e.latlng.lat, e.latlng.lng);
+        });
+
+        // Actualizar marcador al cambiar los valores de latitud y longitud
+        document.getElementById('id_latitud').addEventListener('change', function () {
+            var lat = parseFloat(document.getElementById('id_latitud').value);
+            var lng = parseFloat(document.getElementById('id_longitud').value);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                updateMarkerAndFields(lat, lng);
+            }
+        });
+
+        document.getElementById('id_longitud').addEventListener('change', function () {
+            var lat = parseFloat(document.getElementById('id_latitud').value);
+            var lng = parseFloat(document.getElementById('id_longitud').value);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                updateMarkerAndFields(lat, lng);
+            }
+        });
+
+        // Inicializa el marcador si ya hay valores de latitud y longitud
+        var initialLat = parseFloat(document.getElementById('id_latitud').value);
+        var initialLng = parseFloat(document.getElementById('id_longitud').value);
+        if (!isNaN(initialLat) && !isNaN(initialLng)) {
+            updateMarkerAndFields(initialLat, initialLng);
+        }
+    });
+</script>
 {% endblock %}

@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timezone
 from django.db import models
 from doctor.const import CIVIL_CHOICES, SEX_CHOICES
 from django.contrib.auth.models import User
@@ -7,7 +7,8 @@ from doctor.utils import valida_cedula,phone_regex
 from django.template.loader import render_to_string
 from django.core.files.base import ContentFile
 import tempfile
-      
+from django.utils.timezone import now
+from django.utils import timezone
     
 """Modelo que representa los diferentes tipos de sangre.
 Se gestiona como un modelo separado para mantener flexibilidad
@@ -188,6 +189,7 @@ class Doctor(models.Model):
     # Imagen que se utilizará en las recetas firmadas por el doctor
     imagen_receta = models.ImageField(upload_to='recetas/', verbose_name="Imagen para Recetas", null=True, blank=True)
     activo = models.BooleanField(default=True,verbose_name="Activo")
+    created_at = models.DateTimeField(default=timezone.now)
     
     @property
     def nombre_completo(self):

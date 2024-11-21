@@ -1,0 +1,154 @@
+{% extends "components/base.html" %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .form-label {
+        color: #4e73df;
+        font-weight: 600;
+    }
+
+    .form-control:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 5px rgba(78, 115, 223, 0.5);
+    }
+
+    .btn-custom {
+        font-weight: bold;
+    }
+
+    .btn-outline-success {
+        color: #1cc88a;
+    }
+
+    .btn-outline-warning {
+        color: #f6c23e;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">{{ grabar }}</h4>
+                </div>
+                <div class="card-body">
+                    <!-- mensajes de error del formulario -->
+                    {% include 'includes/message_error_form.html' %}
+
+                    <!-- Formulario -->
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row gy-4">
+                            <!-- Sección de Atención -->
+                            <div class="col-md-6">
+                                <label for="{{ form.atencion.id_for_label }}" class="form-label">
+                                    {{ form.atencion.label }}
+                                </label>
+                                {{ form.atencion }}
+                                <div class="text-danger small">{{ form.atencion.errors }}</div>
+                            </div>
+
+                            <!-- Sección de Tipo de Examen -->
+                            <div class="col-md-6">
+                                <label for="{{ form.tipo_examen.id_for_label }}" class="form-label">
+                                    {{ form.tipo_examen.label }}
+                                </label>
+                                {{ form.tipo_examen }}
+                                <div class="text-danger small">{{ form.tipo_examen.errors }}</div>
+                            </div>
+
+                            <!-- Sección de Doctor -->
+                            <div class="col-md-6">
+                                <label for="{{ form.doctor.id_for_label }}" class="form-label">
+                                    {{ form.doctor.label }}
+                                </label>
+                                {{ form.doctor }}
+                                <div class="text-danger small">{{ form.doctor.errors }}</div>
+                            </div>
+
+                            <!-- Sección de Estado -->
+                            <div class="col-md-6">
+                                <label for="{{ form.estado.id_for_label }}" class="form-label">
+                                    {{ form.estado.label }}
+                                </label>
+                                {{ form.estado }}
+                                <div class="text-danger small">{{ form.estado.errors }}</div>
+                            </div>
+
+                            <!-- Sección de Descripción -->
+                            <div class="col-12">
+                                <label for="{{ form.descripcion.id_for_label }}" class="form-label">
+                                    {{ form.descripcion.label }}
+                                </label>
+                                {{ form.descripcion }}
+                                <div class="text-danger small">{{ form.descripcion.errors }}</div>
+                            </div>
+
+                            <!-- Archivo de Resultado -->
+                            <div class="col-12">
+                                <label for="{{ form.archivo_resultado.id_for_label }}" class="form-label">
+                                    Archivo de Resultado (PDF)
+                                </label>
+                                <input type="file" class="form-control" id="{{ form.archivo_resultado.id_for_label }}"
+                                    name="archivo_resultado" accept=".pdf">
+                                <div class="text-danger small">{{ form.archivo_resultado.errors }}</div>
+                                {% if form.instance.archivo_resultado %}
+                                <div class="form-text">Archivo actual: {{ form.instance.archivo_resultado.name }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Observaciones -->
+                            <div class="col-12">
+                                <label for="{{ form.observaciones_doctor.id_for_label }}" class="form-label">
+                                    Observaciones del Doctor
+                                </label>
+                                {{ form.observaciones_doctor }}
+                                <div class="text-danger small">{{ form.observaciones_doctor.errors }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="mt-4 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-outline-success btn-custom me-2">
+                                {{ grabar }}
+                            </button>
+                            <a href="{{ back_url }}" class="btn btn-outline-warning btn-custom">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const fileInput = document.getElementById('{{ form.archivo_resultado.id_for_label }}');
+        fileInput?.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const validTypes = ['application/pdf'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Por favor, suba solo archivos PDF');
+                    e.target.value = '';
+                    return;
+                }
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('El archivo no debe superar los 5MB');
+                    e.target.value = '';
+                    return;
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

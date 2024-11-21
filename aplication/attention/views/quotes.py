@@ -11,16 +11,12 @@ from aplication.attention.forms.quotes import QuoteForm
 from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
 from doctor.utils import save_audit
 from django.core.mail import send_mail
-from datetime import datetime, timedelta
-from django.utils import timezone  # Agregamos esto
-
-
 
 class QuoteListView(LoginRequiredMixin, ListViewMixin, ListView):
     template_name = "attention/quotes/list.html"
     model = CitaMedica
     context_object_name = 'quotes'
-    
+
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
@@ -30,27 +26,6 @@ class QuoteListView(LoginRequiredMixin, ListViewMixin, ListView):
             )
         return CitaMedica.objects.all()
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        hoy = timezone.now().date()
-        hora_actual = timezone.now().time()
-        fecha_limite = hoy + timedelta(days=7)
-        
-        proximas_citas = CitaMedica.objects.filter(
-            Q(fecha=hoy, hora_cita__gte=hora_actual) | Q(fecha__gt=hoy)
-        ).order_by('fecha', 'hora_cita')
-
-        context.update({
-            'proximas_citas': proximas_citas,
-            'fecha_actual': hoy,
-            'fecha_limite': fecha_limite,
-            'total_citas': proximas_citas.count()
-        })
-
-        return context
-    
-    
 class QuoteCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     model = CitaMedica
     template_name = 'attention/quotes/form.html'
@@ -74,17 +49,16 @@ class QuoteCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
         message = f"""
 ¡Hola {quote.paciente.nombres}!
 
-Tu cita médica ha sido programada exitosamente.
+Tu cita médica ha sido programada exitosamente. A continuación, los detalles:
 
-Detalles de la Cita:
 📅 Fecha: {quote.fecha.strftime('%d/%m/%Y')}
 ⏰ Hora: {quote.hora_cita.strftime('%H:%M')}
 📋 Estado: {quote.estado}
 
 Recordatorios importantes:
-• Llegar 10 minutos antes a su cita
-• Traer su documento de identidad
-• En caso de algun problema con su cita comunicarse antes.
+• Por favor, llegue 10 minutos antes de su cita
+• Traiga su documento de identidad
+• Si necesita cancelar, háganoslo saber con 24 horas de anticipación
 
 ¡Gracias por confiar en nuestros servicios médicos!
 
@@ -133,7 +107,7 @@ class QuoteUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
 
 class QuoteDeleteView(DeleteView, DeleteViewMixin, LoginRequiredMixin):
     model = CitaMedica
-    # template_name = 'attention/quotes/delete.html'
+    template_name = 'attention/quotes/delete.html'
     success_url = reverse_lazy('attention:quote_list')
 
     def post(self, request, *args, **kwargs):

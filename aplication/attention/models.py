@@ -220,4 +220,57 @@ class Certificado(models.Model):
     def __str__(self):
         return f"{self.tipo_certificado} - {self.atencion.paciente}"
     
+from django.db import models
+from django.utils import timezone
+from django.core.validators import FileExtensionValidator
+
+class Examen(models.Model):
+    """
+    Modelo para gestionar exámenes médicos con soporte para subida de archivos PDF
+    """
+    # Tipos de estado para el examen
+    ESTADO_CHOICES = [
+        ('PENDITE', 'Pendiente'),
+        ('PROCESADO', 'Procesando'),
+        ('COMPLETADO', 'Completado'),
+        ('CANCELADO', 'Cancelado')
+    ]
+
+    # Tipos de exámenes (puedes expandir esta lista)
+    TIPO_EXAMEN_CHOICES = [
+        ('sangre', 'Análisis de Sangre'),
+        ('orina', 'Análisis de Orina'),
+        ('rayosx', 'Rayos X'),
+        ('tomografia', 'Tomografía'),
+        ('otro', 'Otro')
+    ]
+
+    # Relaciones con otros modelos (asumiendo que tienes modelos de Doctor y Atencion)
+    doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL,related_name='examenes',null=True,blank=True)
+    atencion = models.ForeignKey(Atencion, on_delete=models.CASCADE,related_name='examenes',null=True,blank=True)
+    # Campos básicos del examen
+    tipo_examen = models.CharField(max_length=20, choices=TIPO_EXAMEN_CHOICES,verbose_name='Tipo de Examen')
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente', verbose_name='Estado del Examen')
+    fecha_solicitud = models.DateTimeField(default=timezone.now, verbose_name='Fecha de Solicitud')
+    fecha_realizacion = models.DateTimeField(null=True, blank=True,verbose_name='Fecha de Realización')
+    # Archivo de resultados
+    archivo_resultado = models.FileField(upload_to='examen/', verbose_name="Examenes", null=True, blank=True)
+    # Descripción o notas adicionales
+    descripcion = models.TextField(null=True, blank=True,verbose_name='Descripción del Examen')
+    # Campos para información adicional
+    observaciones_doctor = models.TextField(null=True, blank=True,verbose_name='Observaciones del Doctor')
     
+    curriculum = models.FileField(upload_to='curriculums/', verbose_name="Curriculum Vitae", null=True, blank=True)
+    # Método para marcar como completado
+    def marcar_completado(self):
+        self.estado = 'completado'
+        self.fecha_realizacion = timezone.now()
+        self.save()
+
+    def __str__(self):
+        return f"{self.get_tipo_examen_display()} - {self.get_estado_display()} ({self.fecha_solicitud.date()})"
+
+    class Meta:
+        verbose_name = 'Examen Médico'
+        verbose_name_plural = 'Exámenes Médicos'
+        ordering = ['-fecha_solicitud']

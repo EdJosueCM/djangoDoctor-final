@@ -1,0 +1,73 @@
+<div class="modal fade" id="examen_Modal" tabindex="-1" aria-labelledby="examen_ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white fw-bold" id="examen_ModalLabel">
+                    <i class="fas fa-flask me-2"></i>Detalles del Examen
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="card border-0 bg-light shadow-sm p-3">
+                            <div class="row g-3">
+                                <!-- ID y Paciente -->
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong><i class="fas fa-id-card me-2 text-primary"></i>ID:</strong>
+                                        <span id="examen-id"></span>
+                                    </p>
+                                    <p class="mb-2"><strong><i
+                                                class="fas fa-user me-2 text-primary"></i>Paciente:</strong>
+                                        <span id="examen-paciente"></span>
+                                    </p>
+                                </div>
+                                <!-- Tipo de Examen y Fecha -->
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong><i class="fas fa-vials me-2 text-primary"></i>Tipo de
+                                            Examen:</strong>
+                                        <span id="examen-tipo_examen"></span>
+                                    </p>
+                                    <p class="mb-2"><strong><i
+                                                class="fas fa-calendar-alt me-2 text-primary"></i>Fecha:</strong>
+                                        <span id="examen-fecha"></span>
+                                    </p>
+                                </div>
+                                <!-- Descripción -->
+                                <div class="col-12">
+                                    <p class="mb-0"><strong><i
+                                                class="fas fa-align-left me-2 text-primary"></i>Descripción:</strong>
+                                        <span id="examen-descripcion"></span>
+                                    </p>
+                                </div>
+                                <!-- Archivo de Resultado -->
+                                <div class="col-12 mt-3">
+                                    <p class="mb-0"><strong><i class="fas fa-file-pdf me-2 text-primary"></i>Archivo de
+                                            Resultado:</strong>
+                                        <a href="#" id="examen-archivo_resultado" target="_blank"
+                                            class="text-decoration-none text-primary">
+                                            Ver archivo
+                                        </a>
+                                    </p>
+                                </div>
+                                <!-- Observaciones -->
+                                <div class="col-12 mt-3">
+                                    <p class="mb-0"><strong><i
+                                                class="fas fa-comment-dots me-2 text-primary"></i>Observaciones:</strong>
+                                        <span id="examen-observaciones"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
