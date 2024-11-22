@@ -24,13 +24,14 @@
                 <h5 class="text-white">{{request.user}}</h5>
             </div>
             <nav class="nav flex-column mt-4">
+                {% if user.is_authenticated %}
                 <a class="nav-link active" href="{% url 'core:home' %}"><i class="fas fa-home me-2"></i> Dashboard</a>
                 <a class="nav-link" href="{% url 'attention:quote_list' %}"><i class="fas fa-calendar-alt me-2"></i> Citas</a>
                 <a class="nav-link" href="{% url 'core:patient_list' %}"><i class="fas fa-user-injured me-2"></i> Pacientes</a>
-                
                 <a class="nav-link" href="{% url 'attention:attention_list' %}"><i class="fas fa-procedures me-2"></i> Atencion</a>
                 <a class="nav-link" href="{% url 'attention:clinical_record_list' %}"><i class="fas fa-procedures me-2"></i>Ficha Clinica</a>
                 <a class="nav-link" href="{% url 'attention:examen_list' %}"><i class="fas fa-stethoscope me-2"></i>Examenes</a>
+                <a class="nav-link" href="{% url 'attention:costos_list' %}"><i class="fas fa-stethoscope me-2"></i>Pago</a>
                 <div class="dropup">
                     <button class="btn nav-link text-white d-flex justify-content-between align-items-center w-100" type="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -66,6 +67,7 @@
                          </li>
                     </ul>
                 </div>                       
+                {% endif %}
             </nav>
         </div>
 
@@ -83,16 +85,18 @@
                                 <div class="d-flex align-items-center">
                                     {% if request.user.is_authenticated %}
                                     <!-- Botón de Cerrar Sesión -->
-                                    <a href="{% url 'security:auth_logout' %}" class="btn btn-link text-white">
+                                    <a href="{% url 'security:profile_view' %} " style="text-decoration: none;" class="btn btn-link text-white">
+                                        <i class="fa fa-user" aria-hidden="true" ></i>Perfil</a>
+                                    <a href="{% url 'security:auth_logout' %}" style="text-decoration: none;" class="btn btn-link text-white">
                                         <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
                                     </a>
                                     {% else %}
                                     <!-- Botón de Iniciar Sesión -->
-                                    <a href="{% url 'security:auth_login' %}" class="btn btn-link text-white">
+                                    <a href="{% url 'security:auth_login' %}" style="text-decoration: none;" class="btn btn-link text-white">
                                         <i class="fas fa-user me-2"></i> Iniciar sesión
                                     </a>
                                     <!-- Botón de Registrarse -->
-                                    <a href="{% url 'security:auth_signup' %}" class="btn btn-link text-white">
+                                    <a href="{% url 'security:auth_signup' %}" style="text-decoration: none;" class="btn btn-link text-white">
                                         <i class="fas fa-sign-out-alt me-2"></i> Registrarse
                                     </a>
                                     {% endif %}
@@ -124,7 +128,7 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card stat-card" style="background: linear-gradient(45deg, #2ecc71, #27ae60);">
+                    <div class="card stat-card" style="background: linear-gradient(45deg, #73d8c7, #539c90);">
                         <div class="card-body d-flex align-items-center">
                             <div class="icon-square bg-white text-success">
                                 <i class="fas fa-user-injured"></i>
@@ -139,7 +143,7 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card stat-card" style="background: linear-gradient(45deg, #e74c3c, #c0392b);">
+                    <div class="card stat-card" style="background: linear-gradient(45deg, #e26153, #882b21);">
                         <div class="card-body d-flex align-items-center">
                             <div class="icon-square bg-white text-danger">
                                 <i class="fas fa-heartbeat"></i>
@@ -275,6 +279,124 @@
         </div>
      </div>
    </div>
+    <!-- Add this modal section right before the closing </div> of container-fluid -->
+    <!-- Auth Modal -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header" style="background: linear-gradient(45deg, #20c7ab, #20c7ab); color: white;">
+                    <h5 class="modal-title fw-bold" id="authModalLabel">
+                        <i class="fas fa-hospital-user me-2"></i>
+                        Bienvenido a SaludSync
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row g-0">
+                        <!-- Columna de imagen -->
+                        <div class="col-md-5 d-none d-md-block">
+                            <div class="h-100 position-relative"
+                                ">
+                                <img src="{% static 'img/medical.jpg' %}" alt="Medical System"
+                                    style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6;">
+                                <div class="position-absolute bottom-0 text-white p-3"
+                                    style="background: rgba(21, 121, 167, 0.8);">
+                                    <h6 class="mb-1">Sistema de Gestión Médica</h6>
+                                    <small>Administra tu consultorio de manera eficiente</small>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Columna de contenido -->
+                        <div class="col-md-7 p-4">
+                            <div class="text-center mb-4">
+                                <i class="fas fa-heartbeat fa-3x mb-3" style="color: #47c2e7;"></i>
+                                <h5 style="color: #47c2e7;">Sistema Integral de Gestión Médica</h5>
+                                <p class="text-muted">Para acceder a nuestro sistema médico necesitas:</p>
+                            </div>
+
+                            <div class="d-flex align-items-center mb-3 p-3 rounded-3 shadow-sm access-option">
+                                <div class="icon-circle me-3">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div>
+                                    <a href="{% url 'security:auth_signup' %}" style="text-decoration: none;" ><h6 class="mb-0" style="color: #47c2e7;">Crear cuenta profesional</h6></a>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center mb-4 p-3 rounded-3 shadow-sm access-option">
+                                <div class="icon-circle me-3" style="background: #47c2e7;">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                </div>
+                                <div>
+                                    <a href="{% url 'security:auth_login' %}" style="text-decoration: none;" ><h6 class="mb-0" style="color: #47c2e7;">Acceder a mi cuenta</h6></a>
+                                </div>
+                            </div>
+
+                            <div class="alert shadow-sm d-flex align-items-center   " role="alert"
+                                style="background: linear-gradient(45deg, #329691, #75b7b9); color: white;">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <div>
+                                    Para acceder al sistema completo debe estar registrado.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        Cancelar
+                    </button>
+                    <div class="d-flex gap-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .access-option {
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+    
+        .access-option:hover {
+            transform: translateX(10px);
+            cursor: pointer;
+            background: #e9ecef;
+        }
+    
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #010822, #020b2e);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            {% if not request.user.is_authenticated %}
+            // Mostrar el modal al cargar la página si el usuario no está autenticado
+            var authModal = new bootstrap.Modal(document.getElementById('authModal'));
+            authModal.show();
+
+            // Agregar event listeners a los enlaces del menú
+            document.querySelectorAll('.nav-link').forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    // Si el usuario no está autenticado y no es el enlace de inicio
+                    if (!link.classList.contains('active')) {
+                        e.preventDefault();
+                        authModal.show();
+                    }
+                });
+            });
+            {% endif %}
+        });
+    </script>
    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
    {% block js %}{% endblock %}
   </body>

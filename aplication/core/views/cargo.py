@@ -6,16 +6,9 @@ from django.db.models import Q
 from aplication.core.models import Cargo
 from aplication.core.forms.cargo_form import CargoForm
 from doctor.utils import save_audit
-from aplication.security.instance.menu_module import MenuModule
-from aplication.security.mixins.mixins import (
-    CreateViewMixin,
-    DeleteViewMixin,
-    ListViewMixin,
-    PermissionMixin,
-    UpdateViewMixin,
-)
 
-class CargoListView(ListView, PermissionMixin, ListViewMixin):
+
+class CargoListView(ListView):
     template_name = "core/cargo/list.html"
     model = Cargo
     context_object_name = "cargos"
@@ -37,7 +30,7 @@ class CargoListView(ListView, PermissionMixin, ListViewMixin):
         return context
 
 
-class CargoCreateView(CreateView, CreateViewMixin, PermissionMixin):
+class CargoCreateView(CreateView):
     model = Cargo
     template_name = "core/cargo/form.html"
     form_class = CargoForm
@@ -64,7 +57,7 @@ class CargoCreateView(CreateView, CreateViewMixin, PermissionMixin):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class CargoUpdateView(UpdateView, UpdateViewMixin, PermissionMixin):
+class CargoUpdateView(UpdateView):
     model = Cargo
     template_name = "core/cargo/form.html"
     form_class = CargoForm
@@ -91,7 +84,7 @@ class CargoUpdateView(UpdateView, UpdateViewMixin, PermissionMixin):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class CargoDeleteView(DeleteView, PermissionMixin, DeleteViewMixin):
+class CargoDeleteView(DeleteView):
     model = Cargo
     template_name = "core/cargo/delete.html"
     success_url = reverse_lazy("core:cargo_list")

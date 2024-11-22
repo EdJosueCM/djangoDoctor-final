@@ -189,9 +189,9 @@ class CostosAtencion(models.Model):
 
 
 class CostoAtencionDetalle(models.Model):
-    costo_atencion = models.ForeignKey(CostosAtencion, on_delete=models.PROTECT, verbose_name="Costo Atención",related_name="costos_atenciones")
+    costo_atencion = models.ForeignKey(CostosAtencion, on_delete=models.CASCADE, verbose_name="Costo Atención",related_name="costos_atenciones")
     # Relación ManyToMany con los servicios adicionales utilizados durante la atención
-    servicios_adicionales = models.ForeignKey(ServiciosAdicionales, on_delete=models.PROTECT, verbose_name="Servicios Adicionales",related_name="servicios_adicionales")
+    servicios_adicionales = models.ForeignKey(ServiciosAdicionales, on_delete=models.CASCADE, verbose_name="Servicios Adicionales",related_name="servicios_adicionales")
     # Costo unitario del servicio adicional
     costo_servicio = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Costo del Servicio")
 

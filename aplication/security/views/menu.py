@@ -1,22 +1,19 @@
+from django.db.models.query import QuerySet
 from django.urls import reverse_lazy
-from aplication.security.forms.menu import MenuForm
+from aplication.security.views.forms import MenuForm
 from aplication.security.models import Menu
 from aplication.security.instance.menu_module import MenuModule
-from aplication.security.mixins.mixins import (
-    CreateViewMixin,
-    DeleteViewMixin,
-    ListViewMixin,
-    PermissionMixin,
-    UpdateViewMixin,
-)
+from aplication.security.mixins.mixins import CreateViewMixin, ListViewMixin, PermissionMixin, UpdateViewMixin, DeleteViewMixin
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.contrib import messages
 from django.db.models import Q
 from django.http import JsonResponse
-import json
-from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
+
+# -- MENU CLASS --#
 class MenuListView(PermissionMixin, ListViewMixin, ListView):
     template_name = "security/menus/list.html"
     model = Menu

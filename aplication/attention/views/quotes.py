@@ -105,19 +105,29 @@ class QuoteUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
         messages.error(self.request, "Error al modificar el formulario. Corrige los errores.")
         return self.render_to_response(self.get_context_data(form=form))
 
-class QuoteDeleteView(DeleteView, DeleteViewMixin, LoginRequiredMixin):
+class QuoteDeleteView(LoginRequiredMixin, DeleteView):
     model = CitaMedica
     template_name = 'attention/quotes/delete.html'
     success_url = reverse_lazy('attention:quote_list')
 
-    def post(self, request, *args, **kwargs):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Eliminar Cita Médica'
+        context['grabar'] = f'¿Está seguro de eliminar la cita médica de {self.object.paciente}?'
+        context['back_url'] = self.success_url
+        return context
+
+    def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
-            self.object.delete()
+            # En lugar de eliminar, marcamos como inactivo
+            self.object.activo = False
+            self.object.save()
+            
             messages.success(request, "Cita médica eliminada con éxito.")
             return redirect(self.success_url)
-        except ProtectedError:
-            messages.error(request, "Esta cita médica no se puede eliminar porque está en uso.")
+        except Exception as e:
+            messages.error(request, "Ha ocurrido un error al eliminar la cita médica.")
             return redirect(self.success_url)
 
 class QuoteDetailView(LoginRequiredMixin, DetailView):

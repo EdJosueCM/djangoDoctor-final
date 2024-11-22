@@ -75,6 +75,10 @@
                                                 class="btn btn-success btn-sm text-white" title="Editar Atencion">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            <a href="{% url 'attention:attention_update' item.id %}" class="btn btn-success btn-sm text-white"
+                                                title="Editar Atencion">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                                 {% with id=item.id name=item.nombre_completo msg="Esta seguro de eliminar al paciente:" %}
                                                 <button class="btn btn-danger" title="Eliminar Atencion"
                                                     onclick="confirmDelete('{{ id }}','{{ name }}','{{ msg|escapejs }}');">

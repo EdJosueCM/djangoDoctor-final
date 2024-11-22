@@ -10,7 +10,6 @@ from doctor.utils import save_audit
 from django.utils.timezone import now
 from django.utils import timezone
 
-
 class DoctorListView(ListView):
     template_name = "core/doctor/list.html"
     model = Doctor

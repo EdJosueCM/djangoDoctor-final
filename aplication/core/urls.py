@@ -11,7 +11,7 @@ from aplication.core.views.diagnosis import *
 from aplication.core.views.cargo import *
 from aplication.core.views.medicamentos import * 
 from aplication.core.views.tipo_med import *
-from aplication.core.views.audit import * 
+# from aplication.core.views.audit import * 
 from aplication.core.views.brand_med import *
 
 
@@ -99,8 +99,8 @@ urlpatterns = [
   path('medicamento_type_detail/<int:pk>/', TipoMedicamentoDetailView.as_view(), name="medicamento_type_detail"),
   
     # Audit URLs
-  path('audit_list/', AuditUserListView.as_view(), name="audit_list"),
-  path('audit_detail/<int:pk>/', AuditUserDetailView.as_view(), name='audit_detail'),
+  # path('audit_list/', AuditUserListView.as_view(), name="audit_list"),
+  # path('audit_detail/<int:pk>/', AuditUserDetailView.as_view(), name='audit_detail'),
   
   # Marca Medicamento
   path('marca_medicamento_list/', MarcaMedicamentoListView.as_view(), name='marca_medicamento_list'),

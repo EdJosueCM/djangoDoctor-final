@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from django.http import HttpRequest
 from aplication.security.models import GroupModulePermission, User
 
+
 class MenuModule:
     def __init__(self, request: HttpRequest):
         self._request = request
@@ -72,3 +73,4 @@ class MenuModule:
             'menu': group_module_permission.module.menu,
             'group_module_permission_list': group_module_permissions,
         }
+

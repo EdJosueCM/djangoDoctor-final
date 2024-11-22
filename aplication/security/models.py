@@ -1,130 +1,79 @@
 import json
+from django.contrib.auth.models import AbstractUser, Group, Permission, BaseUserManager
 from crum import get_current_request
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import Group
-from django.contrib.auth.models import Permission
 from django.db import models
 from django.forms import model_to_dict
+from django.conf import settings
+from django.contrib.auth.base_user import BaseUserManager
+from doctor import settings
 
-# ficha,prestamos,nomina
+
 class Menu(models.Model):
     name = models.CharField(verbose_name='Nombre', max_length=150, unique=True)
     icon = models.CharField(verbose_name='Icono', max_length=100)
-  
+
     def __str__(self):
         return self.name
 
     def get_model_to_dict(self):
-        item = model_to_dict(self)
-        return item
+        return model_to_dict(self)
 
     def get_icon(self):
-        if self.icon:
-            return self.icon
-        return 'bi bi-calendar-x-fill'
+        return self.icon if self.icon else 'bi bi-calendar-x-fill'
 
     class Meta:
         verbose_name = 'Menu'
         verbose_name_plural = 'Menus'
         ordering = ['-name']
 
-# menu ficha: modulos: empleado, cargo
-# permisos: add_empleado, view_empleado, change_empleado, delete_empleado
 class Module(models.Model):
     url = models.CharField(verbose_name='Url', max_length=100, unique=True)
     name = models.CharField(verbose_name='Nombre', max_length=100)
-    menu = models.ForeignKey(Menu, on_delete=models.PROTECT,verbose_name='Menu')
-    description = models.CharField(
-        verbose_name='Descripción',
-        max_length=200,
-        null=True,
-        blank=True
-    )
-    icon = models.CharField(verbose_name='Icono', max_length=100, null=True,
-                            blank=True)
+    menu = models.ForeignKey(Menu, on_delete=models.PROTECT, verbose_name='Menu')
+    description = models.CharField(verbose_name='Descripción', max_length=200, null=True, blank=True)
+    icon = models.CharField(verbose_name='Icono', max_length=100, null=True, blank=True)
     is_active = models.BooleanField(verbose_name='Es activo', default=True)
-    permissions = models.ManyToManyField(
-        verbose_name='Permisos',
-        to=Permission,
-        blank=True
-    )
+    permissions = models.ManyToManyField(Permission, verbose_name='Permisos', blank=True)
 
-   
     def __str__(self):
         return '{} [{}]'.format(self.name, self.url)
 
     def get_model_to_dict(self):
-        item = model_to_dict(self)
-        return item
+        return model_to_dict(self)
 
     def get_icon(self):
-        if self.icon:
-            return self.icon
-        return 'bi bi-x-octagon'
+        return self.icon if self.icon else 'bi bi-x-octagon'
 
     class Meta:
         verbose_name = 'Modulo'
         verbose_name_plural = 'Modulos'
         ordering = ('-name',)
-# grupo: menu:     modulos : add,view...
-# admi: ficha: sobretiempo,rubros: add_sobretiemp,view_sobretiemp,add_rubros,view_rubros
-# auditoria: sobretiempo,rubros: add_sobretiemp,view_sobretiemp,add_rubros,view_rubros
+
 class GroupModulePermission(models.Model):
-    group = models.ForeignKey(Group, on_delete=models.PROTECT,verbose_name='Grupo')
-    module = models.ForeignKey(Module, on_delete=models.PROTECT,verbose_name='Modulo')
-    permissions = models.ManyToManyField(Permission, blank=True,verbose_name='Permisos')
+    group = models.ForeignKey(Group, on_delete=models.PROTECT, verbose_name='Grupo')
+    module = models.ForeignKey(Module, on_delete=models.PROTECT, verbose_name='Modulo')
+    permissions = models.ManyToManyField(Permission)
 
     def __str__(self):
-        return f"{self.module.name} -{self.group.name}"
+        return f"{self.module.name} - {self.group.name}"
 
     @staticmethod
-    # obtiene los modulos con su respectivo menu del grupo requerido
     def get_group_module_permission_active_list(group_id):
-        return GroupModulePermission.objects.select_related(
-            'module',
-            'module__menu'
-        ).filter(
-            group_id=group_id,
-            module__is_active=True
-        )
+        return GroupModulePermission.objects.select_related('module', 'module__menu').filter(
+            group_id=group_id, module__is_active=True)
 
     class Meta:
         verbose_name = 'Grupo modulo permiso'
         verbose_name_plural = 'Grupos modulos Permisos'
         ordering = ('-id',)
 
-
 class User(AbstractUser):
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
     dni = models.CharField(verbose_name='Cédula o RUC', max_length=13, blank=True, null=True)
-    image = models.ImageField(
-        verbose_name='Archivo de imagen',
-        upload_to='users/',
-        max_length=1024,
-        blank=True,
-        null=True
-    )
+    image = models.ImageField(verbose_name='Archive image', upload_to='users/', max_length=1024, blank=True, null=True)
     email = models.EmailField('Email', unique=True)
-    direction = models.CharField('Dirección', max_length=200, blank=True, null=True)
-    phone = models.CharField('Teléfono', max_length=50, blank=True, null=True)
-
-    # Redefine las relaciones conflictivas con un related_name único
-    groups = models.ManyToManyField(
-        Group,
-        related_name="security_user_set",  # Cambia el nombre inverso
-        blank=True,
-        help_text="The groups this user belongs to.",
-        verbose_name="groups",
-    )
-    user_permissions = models.ManyToManyField(
-        Permission,
-        related_name="security_user_permissions_set",  # Cambia el nombre inverso
-        blank=True,
-        help_text="Specific permissions for this user.",
-        verbose_name="user permissions",
-    )
-
+    direction = models.CharField('Direccion', max_length=200, blank=True, null=True)
+    phone = models.CharField('Telefono', max_length=50, blank=True, null=True)
+    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "first_name", "last_name"]
 
@@ -132,8 +81,8 @@ class User(AbstractUser):
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
         permissions = (
-            ("change_userprofile", "Cambiar perfil del usuario"),
-            ("change_userpassword", "Cambiar contraseña del usuario"),
+            ("change_userprofile", "Cambiar perfil Usuario"),
+            ("change_userpassword", "Cambiar password Usuario"),
         )
 
     def __str__(self):
@@ -151,10 +100,7 @@ class User(AbstractUser):
 
     def get_group_session(self):
         request = get_current_request()
-        group_id = request.session.get('group_id')
-        if group_id is not None:
-            return Group.objects.get(pk=group_id)
-        return None
+        return Group.objects.get(pk=request.session['group_id'])
 
     def set_group_session(self):
         request = get_current_request()
@@ -165,9 +111,28 @@ class User(AbstractUser):
                 request.session['group_id'] = request.session['group'].id
 
     def get_image(self):
-        if self.image:
-            return self.image.url
-        return '/static/img/usuario_anonimo.png'
+        return self.image.url if self.image else '/static/img/usuario_anonimo.png'
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('El email debe ser proporcionado')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('El superusuario debe tener is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('El superusuario debe tener is_superuser=True.')
+
+        return self.create_user(email, password, **extra_fields)
 
 class AuditUser(models.Model):
     TIPOS_ACCIONES = (
@@ -175,7 +140,11 @@ class AuditUser(models.Model):
         ('M', 'M'),   # Modificacion
         ('E', 'E')    # Eliminacion
     )
-    usuario = models.ForeignKey(User, verbose_name='Usuario',on_delete=models.PROTECT)
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # Cambia esto
+        verbose_name='Usuario',
+        on_delete=models.PROTECT
+    )
     tabla = models.CharField(max_length=100, verbose_name='Tabla')
     registroid = models.IntegerField(verbose_name='Registro Id')
     accion = models.CharField(choices=TIPOS_ACCIONES, max_length=10, verbose_name='Accion')
@@ -190,3 +159,4 @@ class AuditUser(models.Model):
         verbose_name = 'Auditoria Usuario '
         verbose_name_plural = 'Auditorias Usuarios'
         ordering = ('-fecha', 'hora')
+        

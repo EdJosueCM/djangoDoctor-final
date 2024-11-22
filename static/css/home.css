@@ -1,7 +1,7 @@
 .sidebar {
   min-height: 100vh;
   background:  hsl(240, 52%, 48%) ;
-  background: linear-gradient(45deg, #2ecc71, #27ae60);
+  background: linear-gradient(45deg, #5cceb5, #449180);
   border-radius: 15px;
   box-shadow: 2 8px 12px rgba(0, 0, 0, 0.5);
   transition: all 0.3s;
@@ -38,7 +38,7 @@
 }
 .navbar {
   background: hsl(240, 52%, 48%) ;
-  background: linear-gradient(45deg, #2ecc71, #27ae60);
+  background: linear-gradient(45deg, #5cceb5, #449180);
   border-radius: 15px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

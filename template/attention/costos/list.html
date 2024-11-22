@@ -1,0 +1,212 @@
+{% extends "components/base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-12 col-lg-12 px-md-4 main-content">
+            <!-- Costos List Content -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="card-title mb-0 text-primary-emphasis fw-bold">{{title}}</h3>
+                    </div>
+
+                    <!-- Search and Filter -->
+                    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between g-3 mb-4">
+                        <form method="GET" action="{% url 'attention:costos_list' %}"
+                            class="d-flex flex-column flex-md-row gap-3 align-items-md-center">
+                            <div class="col-md-6">
+                                <input type="text" name="q" class="form-control search-box" value="{{ request.GET.q }}"
+                                    placeholder="Buscar por paciente...">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="date" name="fecha" class="form-control" value="{{ request.GET.fecha }}">
+                            </div>
+                        </form>
+                        <a class="btn btn-primary fw-bold mt-3 mt-md-0" href="{% url 'attention:costos_create' %}">
+                            <i class="fas fa-plus me-2"></i>Nuevo Costo
+                        </a>
+                    </div>
+
+                    <!-- Costos Table -->
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Paciente</th>
+                                    <th>Atención</th>
+                                    <th>Fecha Pago</th>
+                                    <th>Total</th>
+                                    <th>Servicios</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for costo in costos %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{costo.atencion.paciente.get_image}}" class="rounded-circle me-3"
+                                                width="30px">
+                                            <div>
+                                                <div class="fw-bold">{{costo.atencion.paciente.nombre_completo}}</div>
+                                                <small class="text-muted">Rec#{{costo.id}}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>{{costo.atencion.fecha_atencion|date:"d/m/Y"}}</div>
+                                        <small
+                                            class="text-muted">{{costo.atencion.motivo_consulta|truncatechars:30}}</small>
+                                    </td>
+                                    <td>{{costo.fecha_pago|date:"d/m/Y H:i"}}</td>
+                                    <td>
+                                        <span class="fw-bold text-success">${{costo.total}}</span>
+                                    </td>
+                                    <td>
+                                        {% for detalle in costo.costos_atenciones.all %}
+                                        <div class="small">{{detalle.servicios_adicionales.nombre_servicio}}</div>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons d-flex gap-2">
+                                            <button class="btn btn-primary btn-sm" title="Detalle Costo"
+                                                onclick="verDetalleCosto('{{costo.id}}')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <a href="{% url 'attention:costos_update' costo.id %}"
+                                                class="btn btn-success btn-sm text-white" title="Editar Costo">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            {% with id=costo.id name=costo.atencion.paciente.nombre_completo msg="¿Está seguro de eliminar el costo de atención de:" %}
+                                            <button class="btn btn-danger"
+                                                onclick="confirmDelete('{{ id }}', 'Está seguro de eliminar?:');">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                            {% endwith %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav class="d-flex justify-content-between align-items-center mt-4">
+                        <p class="text-muted mb-0">{{ page_obj.start_index }} - {{ page_obj.end_index }} de {{ page_obj.paginator.count }} Costos
+                        </p>
+                        <ul class="pagination mb-0">
+                            {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1"><i class="fas fa-chevron-left"></i></a>
+                            </li>
+                            {% endif %}
+                            {% for num in page_obj.paginator.page_range %}
+                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}">{{num}}</a>
+                            </li>
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para ver detalles del costo -->
+<div class="modal fade" id="costoDetalleModal" tabindex="-1" aria-labelledby="costoDetalleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="costoDetalleModalLabel">Detalle de Costo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <img id="paciente-foto" src="" class="img-fluid rounded-circle" style="width: 100px;">
+                    </div>
+                    <div class="col-md-8">
+                        <h5 id="paciente-nombres"></h5>
+                        <p class="mb-1">Recibo #<span id="costo-id"></span></p>
+                        <p class="mb-1">Fecha: <span id="costo-fecha"></span></p>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table" id="serviciosTable">
+                        <thead>
+                            <tr>
+                                <th>Servicio</th>
+                                <th>Costo</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <th id="costo-total"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'includes/confirm_delete_modal.html' %}
+<script>
+
+    function confirmDelete(id, name, msg) {
+        document.getElementById('modalMessage').innerText = `${msg} ${name}`;
+        const form = document.getElementById('deleteForm');
+        form.action = `/costos_delete/${id}/`;  // Asegúrate de que esta ruta coincida con tu urls.py
+        const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        modal.show();
+    }
+
+    function syncTable(servicios) {
+        const tableBody = document.querySelector('#serviciosTable tbody');
+        tableBody.innerHTML = '';
+
+        servicios.forEach((servicio) => {
+            const row = `
+                <tr>
+                    <td>${servicio.servicio_nombre}</td>
+                    <td>$${servicio.costo_servicio}</td>
+                </tr>`;
+            tableBody.innerHTML += row;
+        });
+    }
+
+    function verDetalleCosto(id) {
+        fetch(`/costos_detail/${id}/`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('costo-id').textContent = data.id;
+                document.getElementById('paciente-nombres').textContent = data.paciente_nombre;
+                document.getElementById('paciente-foto').src = data.paciente_foto;
+                document.getElementById('costo-fecha').textContent = data.fecha_pago;
+                document.getElementById('costo-total').textContent = `$${data.total}`;
+
+                syncTable(JSON.parse(data.servicios));
+
+                const modal = new bootstrap.Modal(document.getElementById('costoDetalleModal'));
+                modal.show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al cargar los datos del costo');
+            });
+    }
+</script>
+{% endblock %}

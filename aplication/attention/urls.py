@@ -10,7 +10,7 @@ from .views.clinical_record import *
 from .views.certificate import * 
 from .views.examen import *
 app_name = 'attention'  
-
+from .views.pago import *
 urlpatterns = [
     # Attention Hours   
     path('attention_hours_list/', AttentionHoursListView.as_view(), name='attention_hours_list'),
@@ -81,4 +81,12 @@ urlpatterns = [
     path('examenes_delete/<int:pk>/', ExamenDeleteView.as_view(), name='examen_delete'),
     path('examenes_detail/<int:pk>/', ExamenDetailView.as_view(), name='examen_detail'),
     # path('examenes/<int:pk>/', ExamenUploadResultadoView.as_view(), name='examen_upload_resultado'),
+    
+    #URLs Pago
+    path('costos_list/', CostosAtencionListView.as_view(), name='costos_list'),
+    path('costos_create/', CostosAtencionCreateView.as_view(), name='costos_create'),
+    path('costos_update/<int:pk>/', CostosAtencionUpdateView.as_view(), name='costos_update'),
+    path('costos_delete/<int:pk>/', CostosAtencionDeleteView.as_view(), name='costos_delete'),
+    path('get_servicio_costo/', get_servicio_costo, name='get_servicio_costo'),
+    #path('examenes_detail/<int:pk>/', ExamenDetailView.as_view(), name='examen_detail'),
 ]

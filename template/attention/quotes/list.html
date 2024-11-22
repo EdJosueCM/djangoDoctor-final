@@ -98,10 +98,12 @@
             {% include 'attention/quotes/includes/detail_modal.html' %}
 
             <script>
+                const deleteUrl = "{% url 'attention:quote_delete' 0 %}".replace('/0/', '/');
+
                 function confirmDelete(id, name, msg) {
                     document.getElementById('modalMessage').innerText = `${msg} ${name}`;
                     const form = document.getElementById('deleteForm');
-                    form.action = `/attention/quote_delete/${id}/`;
+                    form.action = `${deleteUrl}${id}/`;
                     const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
                     modal.show();
                 }

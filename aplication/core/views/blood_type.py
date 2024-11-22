@@ -6,16 +6,8 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.db.models import Q
 from doctor.utils import save_audit
-from aplication.security.instance.menu_module import MenuModule
-from aplication.security.mixins.mixins import (
-    CreateViewMixin,
-    DeleteViewMixin,
-    ListViewMixin,
-    PermissionMixin,
-    UpdateViewMixin,
-)
 
-class BloodTypeListView(ListView, PermissionMixin, ListViewMixin):
+class BloodTypeListView(ListView):
     template_name = "core/blood_type/list.html"
     model = TipoSangre
     context_object_name = 'Tipos_Sangre'
@@ -37,7 +29,7 @@ class BloodTypeListView(ListView, PermissionMixin, ListViewMixin):
         return context
     
 
-class BloodTypeCreateView(CreateView, PermissionMixin, CreateViewMixin):
+class BloodTypeCreateView(CreateView):
     model = TipoSangre
     template_name = 'core/blood_type/form.html'
     form_class = BloodTypeForm
@@ -62,7 +54,7 @@ class BloodTypeCreateView(CreateView, PermissionMixin, CreateViewMixin):
         print(form.errors)
         return self.render_to_response(self.get_context_data(form=form))
     
-class BloodTypeUpdateView(UpdateView, PermissionMixin, UpdateViewMixin):
+class BloodTypeUpdateView(UpdateView):
     model = TipoSangre
     template_name = 'core/blood_type/form.html'
     form_class = BloodTypeForm
@@ -87,7 +79,7 @@ class BloodTypeUpdateView(UpdateView, PermissionMixin, UpdateViewMixin):
         print(form.errors)
         return self.render_to_response(self.get_context_data(form=form))
 
-class BloodTypeDeleteView(DeleteView, DeleteViewMixin, PermissionMixin):
+class BloodTypeDeleteView(DeleteView):
     model = TipoSangre
     template_name = 'core/blood_type/delete.html'
     success_url = reverse_lazy('core:blood_type_list')
